@@ -57,7 +57,7 @@ def extract_object_from_file(file_full_path):
     function get dict with file info and will try to extract one
     of the MS SQL server data base objects
     TABLE, STORED PROCEDURE 
-
+    :returns object_name dict (["schema"],["name"],["fullname"],["type"])
     TODO
     deal with the case then create is the last word
     """
@@ -73,7 +73,7 @@ def extract_object_from_file(file_full_path):
             print(f'find create word on position {i} next word "{words[i + 1]}"')
             if (words[i + 1] == "procedure") or (words[i + 1] == "proc"):
                 print(f'-----------------find procedure')
-                object_from_file["type"] = "stored procedure"
+                object_from_file["type"] = "stored_procedure"
                 object_name = get_object_name(words[i + 2])
                 object_from_file["fullname"] = object_name["fullname"]
                 object_from_file["schema"] = object_name["schema"]
@@ -88,7 +88,7 @@ def extract_object_from_file(file_full_path):
                 object_from_file["name"] = object_name["name"]
                 break
             elif words[i + 1] == "table":
-                print(f'-----------------find view')
+                print(f'-----------------find table')
                 object_from_file["type"] = "table"
                 object_name = get_object_name(words[i + 2])
                 object_from_file["fullname"] = object_name["fullname"]
@@ -96,8 +96,8 @@ def extract_object_from_file(file_full_path):
                 object_from_file["name"] = object_name["name"]
                 break
             elif words[i + 1] == "function":
-                print(f'-----------------find view')
-                object_from_file["type"] = "table"
+                print(f'-----------------find function')
+                object_from_file["type"] = "function"
                 object_name = get_object_name(words[i + 2])
                 object_from_file["fullname"] = object_name["fullname"]
                 object_from_file["schema"] = object_name["schema"]

@@ -1,6 +1,7 @@
 import dflw_getfiles
 import dflw_modules as dflwm
 import json
+import os
 
 
 class FilesToReview:
@@ -8,16 +9,43 @@ class FilesToReview:
     files = list()
 
 
-def prepareconfiginjson(mp: FilesToReview):
-    jsonStr = json.dumps(mp.__dict__)
+class DataFlowObects:
+    config_json = "dataflow.json"
+    config_path = "set"
+    objects = list()
+
+    def save_as_json(self):
+        json_str = json.dumps(self.__dict__)
+        with open(path_json_config, 'w') as f1:
+            f1.write(json_str)
+
+
+def prepare_config_in_json(mp: FilesToReview):
+    json_str = json.dumps(mp.__dict__)
     with open(path_json_config, 'w') as f1:
-        f1.write(jsonStr)
+        f1.write(json_str)
+
+
+def save_list_as_json(dflw_objects, folder):
+    """
+    dump list to json
+    :param dflw_objects: list of dfwl objects
+    :param folder:
+    :return: none
+    """
+    json_str = json.dumps(dflw_objects)
+    with open(os.path.join(folder, "dflw_objects" + "." + "json"), 'w') as f1:
+        f1.write(json_str)
+    pass
 
 
 if __name__ == '__main__':
 
+    container_name = "matrix_uk_etl"
+    container_type = "mssql_database"
     path = r"C:\repos\automapping\adfmanager\src\MATRIX_UK_ETL"
     path_json_config = r"C:\repos\dataflow-doc-generator\output\output-files.json"
+    output_folder_path = r"C:\repos\dataflow-doc-generator\output"
 
     files_sql = [f for f in dflw_getfiles.get_files_by_path(path) if f['fileextension'] == '.sql']
 
@@ -27,13 +55,26 @@ if __name__ == '__main__':
     mp.files = files_sql
 
     # dump to json file
-    prepareconfiginjson(mp)
+    prepare_config_in_json(mp)
+
+    # find data flow objects
+    dflw_objects = list()
 
     for file in mp.files:
         # print(file['filename'])
         object_from_file = dflwm.extract_object_from_file(file["filefullpath"])
         if object_from_file["type"] != "null":
-            print(object_from_file)
+            object_from_file["container_name"] = container_name
+            object_from_file["container_type"] = container_type
+            object_from_file["object_source_file_fill_path"] = file["filefullpath"]
+            object_from_file["object_key"] = container_type + '/' + container_name + '/' + object_from_file[
+                "type"] + '/' + object_from_file["fullname"]
+            object_from_file["object_key"] = object_from_file["object_key"].replace(' ', '_')
+            dflw_objects.append(object_from_file)
 
-    # review files in list
-    # try to find CREATE TABLE statement and prepare Object
+    save_list_as_json(dflw_objects, output_folder_path)
+
+
+
+# review files in list
+# try to find CREATE TABLE statement and prepare Object
