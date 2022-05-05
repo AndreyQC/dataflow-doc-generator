@@ -30,7 +30,7 @@ if __name__ == '__main__':
     prepareconfiginjson(mp)
 
     for file in mp.files:
-        print(file['filename'])
+        # print(file['filename'])
         object_from_file = dflwm.extract_object_from_file(file["filefullpath"])
         if object_from_file["type"] != "null":
             print(object_from_file)
