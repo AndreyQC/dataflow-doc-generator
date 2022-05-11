@@ -8,11 +8,71 @@ class DataFlowObject:
     files = list()
 
 
+def search_edges_in_file(not_table, tables):
+    """
+    :param not_table:
+    :param tables:
+    :return:
+    """
+    # print(f'Analyzing not table script {not_table["name"]}')
+
+    file_content = get_normalized_file_content(
+        (get_file_content(not_table["object_source_file_full_path"])))
+    words = file_content.split(" ")
+
+    found_edges = list()
+
+    for i, k in enumerate(words):
+        for table_key, table in tables.items():
+            edge = dict()
+            if k == table["name"] or k == table["fullname"]:
+                # print(
+                #     f'\t\t found a table {table["name"]} in script in {i} position source file '
+                #     f'{not_table["object_source_file_full_path"]}')
+                # following cases
+                # ['parametername', ',parametervalue', 'newline', 'from', 'adf.processheaderparameter',  'where']
+                if words[i - 1] == "from":
+                    edge["source_object_key"] = table["object_key"]
+                    edge["destination_object_key"] = not_table["object_key"]
+                    edge["relation"] = "select"
+                    # print(f'\t\t  ===================  found edge =============================== ')
+                    # print(f'\t\t  source object table {table["object_key"]} ')
+                    # print(f'\t\t  destination object  {not_table["object_key"]} ')
+                elif words[i - 1] == "update":
+                    edge["source_object_key"] = not_table["object_key"]
+                    edge["destination_object_key"] = table["object_key"]
+                    edge["relation"] = "updated by"
+                    # print(f'\t\t  ===================  found edge =============================== ')
+                    # print(f'\t\t  source object table n{ot_table["object_key"]} ')
+                    # print(f'\t\t  destination object  {table["object_key"]} ')
+                elif words[i - 1] == "into" and words[i - 2] == "insert":
+                    edge["source_object_key"] = not_table["object_key"]
+                    edge["destination_object_key"] = table["object_key"]
+                    edge["relation"] = "insert by"
+                    # print(f'\t\t  ===================  found edge =============================== ')
+                    # print(f'\t\t  source object table {not_table["object_key"]} ')
+                    # print(f'\t\t  destination object  {table["object_key"]} ')
+                elif words[i - 1] == "join" and words[i - 2] == "inner":
+                    edge["source_object_key"] = table["object_key"]
+                    edge["destination_object_key"] = not_table["object_key"]
+                    edge["relation"] = "select"
+                    # print(f'\t\t  ===================  found edge =============================== ')
+                    # print(f'\t\t  source object table {table["object_key"]} ')
+                    # print(f'\t\t  destination object  {not_table["object_key"]} ')
+                # else:
+                # print(f'*******************************************************************')
+                # print(words[i - 7:i + 1], words[i - 2], words[i - 1], words[i])
+                # print(edge)
+            if bool(edge):
+                found_edges.append(edge)
+    return found_edges
+
+
 def get_file_content(filepath: string):
     """ function get file content as a string by filepath
         returns: file content as string
     """
-    with open(filepath, 'r', encoding="utf-8") as theFile:
+    with open(filepath, 'r', encoding="utf-8-sig") as theFile:
         r = theFile.read()
         return r
 
@@ -25,8 +85,8 @@ def get_normalized_file_content(file_content: string):
         4. replace several spaces with one space
         returns: normalized file content
     """
-    normalized_file_content = file_content.replace('\n', ' [newline] ').replace('\t', ' ').replace('(', ' ')\
-        .replace(')', ' ').lower()
+    normalized_file_content = file_content.replace('\n', ' [newline] ').replace('\t', ' ').replace('(', ' ') \
+        .replace(')', ' ').replace('[', '').replace(']', '').lower()
     normalized_file_content = re.sub(' +', ' ', normalized_file_content)
     return normalized_file_content
 

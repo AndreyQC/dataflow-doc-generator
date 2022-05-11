@@ -1,0 +1,312 @@
+[
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.configuration",
+    "destination_object_key": "mssql_database/matrix_uk_etl/function/adf.fn_configuration_get_bykey",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processheaderparameter",
+    "destination_object_key": "mssql_database/matrix_uk_etl/function/adf.fn_querywithparameters_getbyprocessheaderid",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.configuration",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_configuration_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.configuration",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_configuration_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.configuration",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_configuration_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.configuration",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_configuration_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.configuration",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_configuration_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_configuration_seed",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.configuration",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.dataintegrationstream",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_dataintegrationstream_getbystreamgroup",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_dataintegrationstream_seed",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.dataintegrationstream",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.file",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_fileset_get_bysourcesystem",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.filetype",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_filetypedetails_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.filetype",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_filetypedetails_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_filetypedetails_seed",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.filetype",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_filetypedetails_update",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.filetype",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.filetype",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_filetypetoprocess_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.filetype",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_file_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_file_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_file_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_file_create",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.file",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.file",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_file_get_byid",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.file",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_file_get_bysourcesystemfiledate",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_file_status_update",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.file",
+    "relation": "updated by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_file_update",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.file",
+    "relation": "updated by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.harpchecklog",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_harpcheck_status_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.hivequery",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_hivequery_getbystream",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_hivequery_seed",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.hivequery",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.file",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_hivestream_parameter_filedate_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.filetype",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_hivestream_parameter_filedate_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.file",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_hivestream_parameter_filedate_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.file",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_hivestream_parameter_filedate_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.file",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_hivestream_parameter_filedate_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_parameter_seed",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.parameter",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processdetails_create",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.processdetails",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processdetails_update",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.processdetails",
+    "relation": "updated by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processdetails",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processdetails_update",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processdetails",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processdetails_update",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processdetails_update",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.processdetails",
+    "relation": "updated by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.processheaderparameter",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.parameter",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processheaderparameter",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.processheaderparameter",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.parameter",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "relation": "updated by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_create",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_processheader_update",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "relation": "updated by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_test_create",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/adf.test",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.test",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/adf.usp_test_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/healthmonitor.usp_emailmessage_create",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/healthmonitor.emailmessage",
+    "relation": "insert by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/healthmonitor.emailmessage",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/healthmonitor.usp_emailmessage_get",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/stored_procedure/healthmonitor.usp_emailmessage_update",
+    "destination_object_key": "mssql_database/matrix_uk_etl/table/healthmonitor.emailmessage",
+    "relation": "updated by"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processdetails",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/healthmonitor.usp_scanner_run_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processdetails",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/healthmonitor.usp_scanner_run_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processheader",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/healthmonitor.usp_scanner_run_create",
+    "relation": "select"
+  },
+  {
+    "source_object_key": "mssql_database/matrix_uk_etl/table/adf.processdetails",
+    "destination_object_key": "mssql_database/matrix_uk_etl/stored_procedure/healthmonitor.usp_scanner_run_create",
+    "relation": "select"
+  }
+]
