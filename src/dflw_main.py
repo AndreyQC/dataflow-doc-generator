@@ -41,18 +41,22 @@ def save_list_as_json(dflw_objects, folder, file_name):
 
 if __name__ == '__main__':
 
-    container_name = "matrix_uk_etl"
-    container_type = "mssql_database"
-    path = r"C:\repos\automapping\adfmanager\src\MATRIX_UK_ETL"
-    path_json_config = r"C:\repos\dataflow-doc-generator\output\output-files.json"
-    output_folder_path = r"C:\repos\dataflow-doc-generator\output"
+    container_name = "greenplum"
+    container_type = "database"
+    path = r"C:\repos\-dumps-\Greenplum_test\dev_cis" # путь до sql файлов
+    path_json_config = r"C:\repos\-dumps-\output_greenplum\output-files.json" # путь до output файла
+    output_folder_path = r"C:\repos\-dumps-\output_greenplum" # путь до папки с output файлами
 
-    files_sql = [f for f in dflw_getfiles.get_files_by_path(path) if f['fileextension'] == '.sql']
-
+    files_sql = [f for f in dflw_getfiles.get_files_by_path(path) if f['fileextension'] == '.sql'] # ищем sql файлы 
+    
+    # files_sql - список всех sql файлов в заданной директории. есть имя_файла, путь_до_папки_где_лежит, расширение, полный_путь_до_файла
+    
     # prepare a list of scripts for review
-    mp = FilesToReview()
+    mp = FilesToReview() 
     mp.config = "config"
     mp.files = files_sql
+
+    # красиаво запихиваем mp(files_sql) в json файл
 
     # dump to json file
     prepare_config_in_json(mp)
@@ -60,25 +64,27 @@ if __name__ == '__main__':
     # find data flow objects
     dflw_objects = list()
 
+    #print(mp)
     for file in mp.files:
-        print("-------" + file['filename'])
+        #print("-------" + file['filename'])
+
         # TODO - remove for debug
-        # if file['filename'] == "Configuration.sql":
-        object_from_file = dflwm.extract_object_from_file(file["filefullpath"])
-        if object_from_file["type"] != "null":
+
+        object_from_file = dflwm.extract_object_from_file(file["filefullpath"]) # dflwm.extract_object_from_file парсит файл и находит table, view, schema
+        if object_from_file["type"] != "null": #если есть данные, то красиво представляем в json формат
             object_from_file["container_name"] = container_name
             object_from_file["container_type"] = container_type
             object_from_file["object_source_file_full_path"] = file["filefullpath"]
-            object_from_file["object_key"] = container_type + '/' + container_name + '/' + object_from_file[
-                "type"] + '/' + object_from_file["fullname"]
+            object_from_file["object_key"] = container_type + '/' + container_name + '/' + object_from_file["type"] + '/' + object_from_file["fullname"]
             object_from_file["object_key"] = object_from_file["object_key"].replace(' ', '_')
             dflw_objects.append(object_from_file)
 
     save_list_as_json(dflw_objects, output_folder_path, "dflw_objects")
 
     # for development read data from file
-    OUTPUT_FOLDER_PATH = r"C:\repos\dataflow-doc-generator\output"
+    OUTPUT_FOLDER_PATH = r"C:\repos\-dumps-\output_greenplum"
     #
+
     with open(os.path.join(OUTPUT_FOLDER_PATH, "dflw_objects" + "." + "json"), 'r') as f:
         data = json.load(f)
 
@@ -104,8 +110,6 @@ if __name__ == '__main__':
         e = dflwm.search_edges_in_file(not_table, tables)
         if bool(e):
             edges.extend(e)
-    print(edges)
+    #print(edges)
 
     save_list_as_json(edges, output_folder_path, "dflw_edges")
-
-

@@ -1,0 +1,29 @@
+1. законфигурить проект - работать с папкой -dumps- (done)
+
+2. разобраться почему нет вьюх
+
+3. цель - сформировать edges
+
+4, законфигурить outut в другой каталог (done)
+
+5. в функции get_normalized_file_content игнорировать весь текст 
+включенный в 
+[<[autodoc-yaml]]
+object:
+  object_catalog: prd_cis
+  object_key: database/prd_cis/schema/cis_dmt/table/t_bpl_promo_tmp
+  object_name: t_bpl_promo_tmp
+  object_schema: cis_dmt
+  object_type: table
+project:
+  bild: true
+  migration_status: ready for PG
+
+[[autodoc-yaml]>]
+
+
+6. поменять порядок циклов
+
+for i, k in enumerate(words):
+        for table_key, table in tables.items():
+            edge = dict()

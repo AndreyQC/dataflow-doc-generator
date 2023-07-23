@@ -5,7 +5,7 @@ import dflw_modules as dflwm
 if __name__ == '__main__':
 
     # for development read data from file
-    OUTPUT_FOLDER_PATH = r"C:\repos\dataflow-doc-generator\output"
+    OUTPUT_FOLDER_PATH = r"C:\repos\dataflow-doc-generator\dataflow-doc-generator\output"
     #
     with open(os.path.join(OUTPUT_FOLDER_PATH, "dflw_objects" + "." + "json"), 'r') as f:
         data = json.load(f)

@@ -7,7 +7,7 @@ import networkx as nx
 if __name__ == '__main__':
 
     # for development read data from file
-    OUTPUT_FOLDER_PATH = r"C:\repos\dataflow-doc-generator\output"
+    OUTPUT_FOLDER_PATH = r"C:\repos\-dumps-\output_greenplum"
     #
     with open(os.path.join(OUTPUT_FOLDER_PATH, "dflw_objects" + "." + "json"), 'r') as f:
         data = json.load(f)

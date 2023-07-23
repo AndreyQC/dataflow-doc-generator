@@ -1,5 +1,6 @@
 import os
 
+# весь этот код отвечает за нахождения пути к файлу
 
 def get_files_by_path(path):
     """

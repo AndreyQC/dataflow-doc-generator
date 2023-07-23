@@ -20,10 +20,14 @@ def search_edges_in_file(not_table, tables):
         (get_file_content(not_table["object_source_file_full_path"])))
     words = file_content.split(" ")
 
-    found_edges = list()
+    # обрезаем файл для уменьшения времени работы и предотвращения ошибок при переборе yaml части файла
+    index = words.index('autodoc-yaml>')
+    words = words[index::]
 
-    for i, k in enumerate(words):
-        for table_key, table in tables.items():
+    #print(words)
+    found_edges = list()
+    for table_key, table in tables.items():
+        for i, k in enumerate(words):
             edge = dict()
             if k == table["name"] or k == table["fullname"]:
                 # print(
@@ -55,10 +59,15 @@ def search_edges_in_file(not_table, tables):
                 elif words[i - 1] == "join" and words[i - 2] == "inner":
                     edge["source_object_key"] = table["object_key"]
                     edge["destination_object_key"] = not_table["object_key"]
-                    edge["relation"] = "select"
+                    edge["relation"] = "select inner join"
                     # print(f'\t\t  ===================  found edge =============================== ')
                     # print(f'\t\t  source object table {table["object_key"]} ')
                     # print(f'\t\t  destination object  {not_table["object_key"]} ')
+                elif words[i - 1] == "join" and words[i - 2] == "outer" and words[i - 3] == "full": 
+                    edge["source_object_key"] = table["object_key"]
+                    edge["destination_object_key"] = not_table["object_key"]
+                    edge["relation"] = "select full outer join" 
+
                 # else:
                 # print(f'*******************************************************************')
                 # print(words[i - 7:i + 1], words[i - 2], words[i - 1], words[i])
@@ -127,12 +136,14 @@ def extract_object_from_file(file_full_path):
     object_from_file = dict()
     object_from_file["type"] = "null"
     object_from_file["fullname"] = "null"
-    # print(words)
-    for i, w in enumerate(words):
-        if (w == "create") and (i != length):
-            print(f'find create word on position {i} next word "{words[i + 1]}"')
-            if (words[i + 1] == "procedure") or (words[i + 1] == "proc"):
-                print(f'-----------------find procedure')
+    #print(words)
+    for i, w in enumerate(words): #w - слова в файле
+        #print(file_full_path)
+        #print(words)
+        if (((words[i - 2] == 'create' and words[i - 1] == 'or'  and words[i] == 'replace') and (i != length)) or (words[i] == "create") and (i != length)): # добавить craete or replace
+            #print(f'find create word on position {i} next word "{words[i + 1]}"')
+            if ((words[i + 1] == "procedure") or (words[i + 1] == "proc")) :
+                #print(f'-----------------find procedure')
                 object_from_file["type"] = "stored_procedure"
                 object_name = get_object_name(words[i + 2])
                 object_from_file["fullname"] = object_name["fullname"]
@@ -140,7 +151,7 @@ def extract_object_from_file(file_full_path):
                 object_from_file["name"] = object_name["name"]
                 break
             elif words[i + 1] == "view":
-                print(f'-----------------find view')
+                #print(f'-----------------find view')
                 object_from_file["type"] = "view"
                 object_name = get_object_name(words[i + 2])
                 object_from_file["fullname"] = object_name["fullname"]
@@ -148,7 +159,7 @@ def extract_object_from_file(file_full_path):
                 object_from_file["name"] = object_name["name"]
                 break
             elif words[i + 1] == "table":
-                print(f'-----------------find table')
+                #print(f'-----------------find table')
                 object_from_file["type"] = "table"
                 object_name = get_object_name(words[i + 2])
                 object_from_file["fullname"] = object_name["fullname"]
@@ -156,8 +167,16 @@ def extract_object_from_file(file_full_path):
                 object_from_file["name"] = object_name["name"]
                 break
             elif words[i + 1] == "function":
-                print(f'-----------------find function')
+                #print(f'-----------------find function')
                 object_from_file["type"] = "function"
+                object_name = get_object_name(words[i + 2])
+                object_from_file["fullname"] = object_name["fullname"]
+                object_from_file["schema"] = object_name["schema"]
+                object_from_file["name"] = object_name["name"]
+                break
+            elif words[i + 1] == "schema":
+                #print(f'-----------------find schema')
+                object_from_file["type"] = "schema"
                 object_name = get_object_name(words[i + 2])
                 object_from_file["fullname"] = object_name["fullname"]
                 object_from_file["schema"] = object_name["schema"]
