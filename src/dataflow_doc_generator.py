@@ -7,7 +7,7 @@ import networkx as nx
 if __name__ == '__main__':
 
     # for development read data from file
-    OUTPUT_FOLDER_PATH = r"C:\repos\-dumps-\output_greenplum"
+    OUTPUT_FOLDER_PATH = r"C:\Users\Andrey_Potapov\YandexDisk\Practice\Programs\D&A.Grow\materials\D&A.Grow scripts\work_item\BL-156\output"
     #
     with open(os.path.join(OUTPUT_FOLDER_PATH, "dflw_objects" + "." + "json"), 'r') as f:
         data = json.load(f)
