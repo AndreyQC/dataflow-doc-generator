@@ -1,5 +1,6 @@
+# TODO - remove
 #to do прочитать файлик с объектами и получить отдельный список таких -> "object_key": "database/greenplum/view/cis_dsp.v_soi_so_plovdiv"
-#открыть файл edges и сделать массив тюплов [('source_object_key', 'destination_object_key'), ....] 
+#открыть файл edges и сделать массив тюплов [("source_object_key", "destination_object_key"), ....] 
 #впихнуть всё вниз
 
 #Python program to print topological sorting of a DAG
@@ -8,10 +9,10 @@ import os
 from collections import defaultdict
 
 #путь до файла с последовательностями
-path_to_edges = r'C:\repos\-dumps-\output_greenplum\dflw_edges.json'
-path_to_edges_top = r'C:\repos\-dumps-\output_greenplum\dflw_objects.json'
-path_to_edges_numbers = r'C:\repos\-dumps-\output_greenplum\dflw_edges_number.json'
-path_to_output =  r'C:\repos\-dumps-\output_greenplum'
+path_to_edges = r"C:\repos\-dumps-\output_greenplum\dflw_edges.json"
+path_to_edges_top = r"C:\repos\-dumps-\output_greenplum\dflw_objects.json"
+path_to_edges_numbers = r"C:\repos\-dumps-\output_greenplum\dflw_edges_number.json"
+path_to_output =  r"C:\repos\-dumps-\output_greenplum"
 
 #чтение файла для нахождения количества вершин и изменения их на числа
 with open(path_to_edges) as json_file:
@@ -27,13 +28,13 @@ with open(path_to_edges_top) as json_file:
 dict_of_numbers = {}
 count = 0
 for i in range(len(data_top)):
-    if data_top[i]['object_key'] not in dict_of_numbers:
-        dict_of_numbers[data_top[i]['object_key']] = count
+    if data_top[i]["object_key"] not in dict_of_numbers:
+        dict_of_numbers[data_top[i]["object_key"]] = count
         count += 1
 
 for i in range(len(data)):
-    if data[i]['destination_object_key'] not in dict_of_numbers:
-        dict_of_numbers[data[i]['destination_object_key']] = count
+    if data[i]["destination_object_key"] not in dict_of_numbers:
+        dict_of_numbers[data[i]["destination_object_key"]] = count
         count += 1
 
 #переделывет из числового в словесный
@@ -69,7 +70,7 @@ class Graph:
             v, gen = working_stack.pop()
             visited[v] = True
              
-            # run through neighbor generator until it's empty
+            # run through neighbor generator until it"s empty
             for    next_neighbor in gen:
                 if not visited[next_neighbor]:  # not seen before?
                     # remember current work
@@ -101,7 +102,7 @@ class Graph:
 # находим количество всех графов и делаем сортировку
 g = Graph(len(dict_of_numbers))
 for i in range(len(data)):
-    g.addEdge(dict_of_numbers[data[i]['source_object_key']], dict_of_numbers[data[i]['destination_object_key']])
+    g.addEdge(dict_of_numbers[data[i]["source_object_key"]], dict_of_numbers[data[i]["destination_object_key"]])
 
 #print("The following is a Topological Sort of the given graph")
 
@@ -109,19 +110,19 @@ for i in range(len(data)):
 queue_of_files = g.nonRecursiveTopologicalSort()
 
 count = 0
-table = ''
-with open(os.path.join(path_to_output, 'sorted_edges' + '.' + 'txt'), 'w') as f:    
+table = ""
+with open(os.path.join(path_to_output, "sorted_edges" + "." + "txt"), "w") as f:    
     for i in range(len(queue_of_files)):
         string = get_key(dict_of_numbers, queue_of_files[i])
-        if 'schema' in string:
-            f.write('{}\n'.format(str(string)))
-        elif 'table' in string:
+        if "schema" in string:
+            f.write("{}\n".format(str(string)))
+        elif "table" in string:
             table = str(string)
-            f.write('{}\n'.format(str(string)))
-        elif 'view' in string:
-            #print('view')
-            f.write('    {}\n'.format(str(string)))
+            f.write("{}\n".format(str(string)))
+        elif "view" in string:
+            #print("view")
+            f.write("    {}\n".format(str(string)))
         
 
 #print(queue_of_files)
-# This code was based of Neelam Yadav's code, modified by Suhail Alnahari, Python-ified by Matthias Urlichhs
+# This code was based of Neelam Yadav"s code, modified by Suhail Alnahari, Python-ified by Matthias Urlichhs

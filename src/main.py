@@ -17,13 +17,13 @@ class DataFlowObects:
 
     def save_as_json(self):
         json_str = json.dumps(self.__dict__)
-        with open(config.get_database_path('output_json'), "w") as f1:
+        with open(config.get_database_path("output_json"), "w") as f1:
             f1.write(json_str)
 
 
 def prepare_config_in_json(mp: FilesToReview):
     json_str = json.dumps(mp.__dict__)
-    with open(config.get_database_path('output_json'), "w") as f1:
+    with open(config.get_database_path("output_json"), "w") as f1:
         f1.write(json_str)
 
 
@@ -41,46 +41,35 @@ def save_list_as_json(dflw_objects, folder, file_name):
 
 
 if __name__ == "__main__":
-    container_name = config.database['container_name']
-    container_type = config.database['container_type']
-    path = config.get_database_path('sql_files')
-    output_folder_path = config.get_database_path('output_folder')
+    container_name = config.database["container_name"]
+    container_type = config.database["container_type"]
+    path = config.get_database_path("sql_files")
+    output_folder_path = config.get_database_path("output_folder")
 
-    files_sql = [f for f in dflw_files.get_files_by_path(path) if f["fileextension"] == ".sql"]
+    files_sql = [f for f in dflw_files.get_files_by_path(path) if f["file_extension"] == ".sql"]
 
     # prepare a list of scripts for review
     mp = FilesToReview()
     mp.config = "config"
     mp.files = files_sql
 
-    # dump to json file
     prepare_config_in_json(mp)
 
     # find data flow objects
     db_objects = list()
 
     for file in mp.files:
-        object_from_file = dflwm.extract_object_from_file(file["filefullpath"])
+        object_from_file = dflwm.extract_object_from_file(file["file_full_path"])
         if object_from_file["type"] != "null":
             object_from_file["container_name"] = container_name
             object_from_file["container_type"] = container_type
-            object_from_file["object_source_file_full_path"] = file["filefullpath"]
-            object_from_file["object_key"] = container_type + "/" + container_name + "/" + object_from_file["type"] + "/" + object_from_file["fullname"]
+            object_from_file["object_source_file_full_path"] = file["file_full_path"]
+            object_from_file["object_key"] = container_type + "/" + container_name + "/"
+            + object_from_file["type"] + "/" + object_from_file["full_name"]
             object_from_file["object_key"] = object_from_file["object_key"].replace(" ", "_")
             db_objects.append(object_from_file)
 
-    db_objects_reduced = [
-        {
-            "type": item["type"],
-            "name": item["fullname"],
-            "schema": item["schema"],
-            "key": item["object_key"].replace("database", "db").replace("postgres", "pg")
-        }
-        for item in db_objects
-    ]
-
     save_list_as_json(db_objects, output_folder_path, "db_objects")
-    save_list_as_json(db_objects_reduced, output_folder_path, "db_objects_reduced")
 
     with open(os.path.join(output_folder_path, "db_objects" + "." + "json"), "r") as f:
         data = json.load(f)
@@ -111,15 +100,20 @@ if __name__ == "__main__":
         if bool(e):
             edges.extend(e)
 
+    # search for functions
+    functions = {key: value for (key, value) in objects.items() if value["type"] == "function"}
+    for not_table_key, not_table in not_tables.items():
+        e = dflwm.search_edges_in_file(not_table, functions)
+        if bool(e):
+            edges.extend(e)
+
+    # search for procedures
+    procedures = {key: value for (key, value) in objects.items() if value["type"] == "procedure"}
+    for not_table_key, not_table in not_tables.items():
+        e = dflwm.search_edges_in_file(not_table, procedures)
+        if bool(e):
+            edges.extend(e)
+
     unique_edges = list(map(dict, set(tuple(d.items()) for d in edges)))
 
     save_list_as_json(unique_edges, output_folder_path, "db_edges")
-    db_edges_reduced = [
-        {
-            "sok": item["source_object_key"].replace("database", "db").replace("postgres", "pg"),
-            "dok": item["destination_object_key"].replace("database", "db").replace("postgres", "pg"),
-            "relation": item["relation"]
-        }
-        for item in unique_edges
-    ]
-    save_list_as_json(db_edges_reduced, output_folder_path, "db_edges_reduced")

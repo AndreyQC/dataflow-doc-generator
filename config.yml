@@ -1,0 +1,15 @@
+database:
+  container_name: "postgres"
+  container_type: "database"
+
+paths:
+  sql_files: "C:\\Users\\Andrey_Potapov\\YandexDisk\\Practice\\Programs\\D&A.Grow\\materials\\D&A.Grow scripts\\work_item\\BL-156\\pg_dp_deploy_output\\ScoreManager_DB"
+  output_json: "C:\\Users\\Andrey_Potapov\\YandexDisk\\Practice\\Programs\\D&A.Grow\\materials\\D&A.Grow scripts\\work_item\\BL-156\\output-reduce-20250225\\output-files.json"
+  output_folder: "C:\\Users\\Andrey_Potapov\\YandexDisk\\Practice\\Programs\\D&A.Grow\\materials\\D&A.Grow scripts\\work_item\\BL-156\\output-reduce-20250225"
+
+visualization:
+  height: "750px"
+  width: "100%"
+  colors:
+    table: "lightblue"
+    default: "lightgreen" 

@@ -3,13 +3,14 @@ from pyvis.network import Network
 import json
 import os
 import networkx as nx
+from config import config
+from sql_processor import FilesToReview, DataFlowObects, prepare_config_in_json, save_list_as_json
 
-if __name__ == '__main__':
-
-    # for development read data from file
-    OUTPUT_FOLDER_PATH = r"C:\Users\Andrey_Potapov\YandexDisk\Practice\Programs\D&A.Grow\materials\D&A.Grow scripts\work_item\BL-156\output"
-    #
-    with open(os.path.join(OUTPUT_FOLDER_PATH, "dflw_objects" + "." + "json"), 'r') as f:
+if __name__ == "__main__":
+    # Используем конфигурацию вместо hardcoded значений
+    OUTPUT_FOLDER_PATH = config.get_database_path('output_folder')
+    
+    with open(os.path.join(OUTPUT_FOLDER_PATH, "dflw_objects" + "." + "json"), "r") as f:
         data = json.load(f)
 
     keys = list()
@@ -20,27 +21,34 @@ if __name__ == '__main__':
 
     objects = dict(zip(keys, data))
 
-    net = Network(height='750px', width='100%')
+    net = Network(
+        height=config.visualization['height'],
+        width=config.visualization['width']
+    )
 
     # assign surrogate keys
     for i, (object_key, object_value) in enumerate(objects.items()):
         print(i)
         print(object_value)
         object_value["object_id"] = i
-        color = "lightgreen"
-        if object_value["type"] == "table":
-            color = "lightblue"
-        net.add_node(object_value["object_key"], label=object_value["type"] + " " + object_value["name"], shape='box',
-                     color=color)  # node id = 1 and label = Node 1
+        node_color = config.get_visualization_color(object_value["type"])
+        net.add_node(
+            object_value["object_key"],
+            label=object_value["type"] + " " + object_value["name"],
+            shape="box",
+            color=node_color
+        )
 
     # go through edges
-    with open(os.path.join(OUTPUT_FOLDER_PATH, "dflw_edges" + "." + "json"), 'r') as f:
+    with open(os.path.join(OUTPUT_FOLDER_PATH, "dflw_edges" + "." + "json"), "r") as f:
         data = json.load(f)
 
     for v in data:
         print(
-            f' source_object_key "{v["source_object_key"]}" object_id = "{objects[v["source_object_key"]]["object_id"]}" destination_object_key  ')
+            f' source_object_key "{v["source_object_key"]}" object_id = "'
+            f'{objects[v["source_object_key"]]["object_id"]}" destination_object_key'
+        )
         net.add_edge(v["source_object_key"], v["destination_object_key"])
 
-    net.show_buttons(filter_=['physics'])
-    net.show('database.html')
+    net.show_buttons(filter_=["physics"])
+    net.show("database.html")
