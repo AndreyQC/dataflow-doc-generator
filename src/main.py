@@ -1,8 +1,8 @@
-import dflw_files
-import dflw_modules as dflwm
+import common.dflw_files as dflw_files
+import common.dflw_modules as dflwm
 import json
 import os
-from config import config
+from common.config import config
 
 
 class FilesToReview:

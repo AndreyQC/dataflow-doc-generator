@@ -3,9 +3,14 @@ database:
   container_type: "database"
 
 paths:
-  sql_files: "C:\\Users\\Andrey_Potapov\\YandexDisk\\Practice\\Programs\\D&A.Grow\\materials\\D&A.Grow scripts\\work_item\\BL-156\\pg_dp_deploy_output\\ScoreManager_DB"
-  output_json: "C:\\Users\\Andrey_Potapov\\YandexDisk\\Practice\\Programs\\D&A.Grow\\materials\\D&A.Grow scripts\\work_item\\BL-156\\output-reduce-20250225\\output-files.json"
-  output_folder: "C:\\Users\\Andrey_Potapov\\YandexDisk\\Practice\\Programs\\D&A.Grow\\materials\\D&A.Grow scripts\\work_item\\BL-156\\output-reduce-20250225"
+  # путь к исходным sql файлам
+  source_sql_files: "C:\\Users\\Andrey_Potapov\\YandexDisk\\Practice\\Programs\\D&A.Grow\\materials\\D&A.Grow scripts\\work_item\\BL-156\\pg_dp_deploy_output\\ScoreManager_DB"
+  # путь к файлу с результатами работы sql_processor
+  output_json: "output-files.json"
+  # путь к папке с результатами работы программы
+  output_folder: "C:\Temp\dataflow-doc-generator\output"
+  # путь к папке с примером результатов работы программы
+  example_output_folder: "C:\repos\personal\dataflow-doc-generator\output"
 
 visualization:
   height: "750px"

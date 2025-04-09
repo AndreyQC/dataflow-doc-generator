@@ -1,15 +1,14 @@
-from turtle import color
 from pyvis.network import Network
 import json
 import os
-import networkx as nx
-from config import config
+from common.config import config
 from sql_processor import FilesToReview, DataFlowObects, prepare_config_in_json, save_list_as_json
 
 if __name__ == "__main__":
-    # Используем конфигурацию вместо hardcoded значений
-    OUTPUT_FOLDER_PATH = config.get_database_path('output_folder')
     
+    OUTPUT_FOLDER_PATH = config.get_database_path('output_folder')
+    EXAMPLE_OUTPUT_FOLDER_PATH = config.get_database_path('example_output_folder')
+
     with open(os.path.join(OUTPUT_FOLDER_PATH, "dflw_objects" + "." + "json"), "r") as f:
         data = json.load(f)
 
@@ -51,4 +50,4 @@ if __name__ == "__main__":
         net.add_edge(v["source_object_key"], v["destination_object_key"])
 
     net.show_buttons(filter_=["physics"])
-    net.show("database.html")
+    net.show(os.path.join(EXAMPLE_OUTPUT_FOLDER_PATH, "database.html"))
