@@ -2,15 +2,20 @@ database:
   container_name: "postgres"
   container_type: "database"
 
+common:
+  vertices_file_name: "vertices"
+  edges_file_name: "edges"
+
 paths:
   # путь к исходным sql файлам
-  source_sql_files: "C:\Temp\dataflow-doc-generator\inputScoreManager_DB"
+  source_sql_files: "C:\\Temp\\dataflow-doc-generator\\input\\ScoreManager_DB"
   # путь к файлу с результатами работы sql_processor
   output_json: "output-files.json"
   # путь к папке с результатами работы программы
-  output_folder: "C:\Temp\dataflow-doc-generator\output"
+  output_folder: "C:\\Temp\\dataflow-doc-generator\\output"
   # путь к папке с примером результатов работы программы
-  example_output_folder: "C:\repos\personal\dataflow-doc-generator\output"
+  example_output_folder: "C:\\repos\\personal\\dataflow-doc-generator\\output"
+
 
 visualization:
   height: "750px"

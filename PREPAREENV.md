@@ -33,9 +33,9 @@
 
 
  Install venv:
-	python -m venv .venv
+	python -m venv venv
 	2. Activate venv:
-	.venv\Scripts\activate
+	.env\Scripts\activate
 	3. Install UV:
 	pip install uv
 	4. Initialize the project: uv init
