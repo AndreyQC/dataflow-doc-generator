@@ -4,7 +4,7 @@ database:
 
 paths:
   # путь к исходным sql файлам
-  source_sql_files: "C:\\Users\\Andrey_Potapov\\YandexDisk\\Practice\\Programs\\D&A.Grow\\materials\\D&A.Grow scripts\\work_item\\BL-156\\pg_dp_deploy_output\\ScoreManager_DB"
+  source_sql_files: "C:\Temp\dataflow-doc-generator\inputScoreManager_DB"
   # путь к файлу с результатами работы sql_processor
   output_json: "output-files.json"
   # путь к папке с результатами работы программы

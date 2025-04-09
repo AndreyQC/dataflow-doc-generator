@@ -5,7 +5,7 @@ def get_files_by_path(path):
     """
     function accept path
     :param string: path
-    :return: array of dictinaries 
+    :return: array of dictinaries
     """
     list_of_files = []
     files_result = []
