@@ -30,3 +30,15 @@
         pip install pyside6
         pip install ruamel.yaml
         pip install psycopg2
+
+
+ Install venv:
+	python -m venv .venv
+	2. Activate venv:
+	.venv\Scripts\activate
+	3. Install UV:
+	pip install uv
+	4. Initialize the project: uv init
+	5. For install the packages: uv add …
+	- uv add pre-commit
+- pre-commit install

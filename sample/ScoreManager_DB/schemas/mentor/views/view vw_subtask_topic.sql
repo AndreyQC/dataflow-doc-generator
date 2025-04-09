@@ -1,0 +1,22 @@
+/*====================================================================================
+[<[autodoc-yaml]]
+object:
+  object_catalog: ScoreManager_DB
+  object_key: pg_database/ScoreManager_DB/schema/mentor/type/view/name/vw_subtask_topic
+  object_name: vw_subtask_topic
+  object_schema: mentor
+  object_type: view
+project:
+  build: true
+
+[[autodoc-yaml]>]
+=====================================================================================*/
+
+CREATE VIEW mentor.vw_subtask_topic AS
+ SELECT stt.topic_id,
+    stt.name AS subtask_topic_name
+   FROM lab.topic stt
+  WHERE (stt.is_topic_for_subtasks = true);
+
+
+ALTER VIEW mentor.vw_subtask_topic OWNER TO bi_admin;
