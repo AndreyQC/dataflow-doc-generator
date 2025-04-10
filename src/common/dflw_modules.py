@@ -56,6 +56,18 @@ def search_edges_in_file(not_table, tables):
                     edge["relation"] = "CHANGE_DATA_IN"
                     edge["action"] = "insert by"
                     logger.debug(f"Создана связь INSERT: {not_table['object_key']} -> {table['object_key']}")
+                elif words[i - 1] == "from" and words[i - 2] == "delete":
+                    edge["source_object_key"] = not_table["object_key"]
+                    edge["destination_object_key"] = table["object_key"]
+                    edge["relation"] = "DELETE_DATA_IN"
+                    edge["action"] = "delete by"
+                    logger.debug(f"Создана связь DELETE: {not_table['object_key']} -> {table['object_key']}")
+                elif words[i - 1] == "table" and words[i - 2] == "truncate":
+                    edge["source_object_key"] = not_table["object_key"]
+                    edge["destination_object_key"] = table["object_key"]
+                    edge["relation"] = "DELETE_DATA_IN"
+                    edge["action"] = "truncate by"
+                    logger.debug(f"Создана связь TRUNCATE: {not_table['object_key']} -> {table['object_key']}")
                 elif words[i - 1] == "into" and words[i - 2] == "merge":
                     edge["source_object_key"] = not_table["object_key"]
                     edge["destination_object_key"] = table["object_key"]
