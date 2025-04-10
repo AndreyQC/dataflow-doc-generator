@@ -1,5 +1,6 @@
 import yaml
 from common.logger import setup_logger
+from common.crypto import get_decrypted_text
 
 logger = setup_logger()
 
@@ -41,6 +42,21 @@ class Config:
     def visualization(self):
         logger.debug("Получение настроек визуализации")
         return self.config["visualization"]
+
+    @property
+    def neo4j(self):
+        """
+        Получение настроек Neo4j с дешифрованием пароля
+        """
+        logger.debug("Получение настроек Neo4j")
+        neo4j_config = self.config["neo4j"].copy()
+        try:
+            # Пробуем дешифровать пароль, если он зашифрован
+            neo4j_config["password"] = get_decrypted_text(neo4j_config["password"])
+            logger.debug("Пароль Neo4j успешно дешифрован")
+        except Exception as e:
+            logger.warning(f"Не удалось дешифровать пароль Neo4j: {str(e)}")
+        return neo4j_config
 
     def get_database_path(self, path_key):
         logger.debug(f"Получение пути для ключа: {path_key}")

@@ -2,6 +2,11 @@ database:
   container_name: "postgres"
   container_type: "database"
 
+neo4j:
+  uri: "bolt://localhost:7687"
+  user: "neo4j"
+  password: "crypto__ENVOS_CRYPTO_01__gAAAAABn94gzD8a6Wrg4nP_PxfS5JnYCeJHA0FkSZhUtdAY_kF7KlHQye06S5OvD8hm0oc8BOFUIhOx7Qkrh2n6KenAls0cVMg=="
+
 common:
   vertices_file_name: "vertices"
   edges_file_name: "edges"
@@ -12,9 +17,9 @@ paths:
   # путь к файлу с результатами работы sql_processor
   output_json: "output-files.json"
   # путь к папке с результатами работы программы
-  output_folder: "C:\\Temp\\dataflow-doc-generator\\output"
+  output_folder: "C:/Temp/dataflow-doc-generator/output"
   # путь к папке с примером результатов работы программы
-  example_output_folder: "C:\\repos\\personal\\dataflow-doc-generator\\output"
+  example_output_folder: "C:/repos/personal/dataflow-doc-generator/output"
 
 
 visualization:

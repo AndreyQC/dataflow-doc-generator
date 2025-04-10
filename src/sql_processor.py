@@ -5,6 +5,7 @@ import os
 from common.config import config
 from common.logger import setup_logger
 from common.dflw_doc_generator import generate_data_flow_diagram
+from common.neo4j_handler import Neo4jHandler
 
 logger = setup_logger()
 
@@ -31,20 +32,25 @@ def prepare_config_in_json(mp: FilesToReview):
         f1.write(json_str)
 
 
-def save_list_as_json(dflw_objects, folder, file_name):
+def save_list_as_json(data_list, output_folder_path, file_name):
     """
-    dump list to json
-    :param dflw_objects: list of dfwl objects
-    :param folder:
-    :return: none
+    Сохранение списка в JSON файл
     """
-    json_str = json.dumps(dflw_objects)
-    with open(os.path.join(folder, file_name + "." + "json"), "w") as f1:
-        f1.write(json_str)
-    pass
+    try:
+        file_path = os.path.join(output_folder_path, f"{file_name}.json")
+        logger.debug(f"Сохранение данных в файл: {file_path}")
+        with open(file_path, "w") as f:
+            json.dump(data_list, f, indent=2)
+        logger.debug("Данные успешно сохранены")
+    except Exception:
+        logger.exception(f"Ошибка при сохранении файла: {file_path}")
+        raise
 
 
-if __name__ == "__main__":
+def process_sql_files():
+    """
+    Обработка SQL файлов и сохранение результатов
+    """
     try:
         logger.info("Начало обработки SQL файлов")
 
@@ -57,96 +63,94 @@ if __name__ == "__main__":
         logger.debug(f"Путь к исходным файлам: {path}")
         logger.debug(f"Путь для выходных файлов: {output_folder_path}")
 
+        # Получаем список SQL файлов
         files_sql = [f for f in dflw_files.get_files_by_path(path) if f["file_extension"] == ".sql"]
         logger.info(f"Найдено {len(files_sql)} SQL файлов для обработки")
 
-        # prepare a list of scripts for review
-        mp = FilesToReview()
-        mp.config = "config"
-        mp.files = files_sql
-
-        prepare_config_in_json(mp)
-        logger.debug("Конфигурация сохранена в JSON")
-
-        # find data flow objects
-        db_objects = list()
-
-        for file in mp.files:
+        # Извлекаем объекты из файлов
+        db_objects = []
+        for file in files_sql:
             logger.debug(f"Обработка файла: {file['file_full_path']}")
             object_from_file = dflwm.extract_object_from_file(file["file_full_path"])
             if object_from_file["type"] != "null":
                 object_from_file["container_name"] = container_name
                 object_from_file["container_type"] = container_type
                 object_from_file["object_source_file_full_path"] = file["file_full_path"]
-                object_key = (
+                object_from_file["object_key"] = (
                     f"{container_type}/{container_name}/"
                     f"{object_from_file['type']}/{object_from_file['full_name']}"
-                )
-                object_from_file["object_key"] = object_key.replace(" ", "_")
+                ).replace(" ", "_")
                 db_objects.append(object_from_file)
                 logger.debug(f"Добавлен объект: {object_from_file['object_key']}")
 
-        # save db objects to json
-        save_list_as_json(db_objects, output_folder_path, config.common["vertices_file_name"])
+        # Сохраняем объекты в JSON
+        save_list_as_json(db_objects, output_folder_path, "db_objects")
         logger.info(f"Сохранено {len(db_objects)} объектов в JSON")
 
-        with open(os.path.join(output_folder_path, config.common["vertices_file_name"] + ".json"), "r") as f:
-            data = json.load(f)
+        # Создаем словарь объектов
+        keys = [obj["object_key"] for obj in db_objects]
+        objects = dict(zip(keys, db_objects))
 
-        keys = list()
-        objects = dict()
+        # Разделяем объекты по типам
+        tables = {k: v for k, v in objects.items() if v["type"] == "table"}
+        not_tables = {k: v for k, v in objects.items() if k not in tables}
+        views = {k: v for k, v in objects.items() if v["type"] == "view"}
+        functions = {k: v for k, v in objects.items() if v["type"] == "function"}
+        procedures = {k: v for k, v in objects.items() if v["type"] == "procedure"}
 
-        for dbo in data:
-            keys.append(dbo["object_key"])
+        logger.info(f"Найдено: таблиц - {len(tables)}, представлений - {len(views)}, "
+                   f"функций - {len(functions)}, процедур - {len(procedures)}")
 
-        objects = dict(zip(keys, data))
-        # dict for tables
-        tables = {key: value for (key, value) in objects.items() if value["type"] == "table"}
-        # dict for other sql objects
-        not_tables = {key: value for (key, value) in objects.items() if key not in tables}
-
-        logger.info(f"Найдено {len(tables)} таблиц и {len(not_tables)} других объектов")
-
-        edges = list()
-        logger.debug(f"----- Начало поиска связей с tables")
+        # Ищем связи
+        edges = []
         for not_table_key, not_table in not_tables.items():
+            # Поиск связей с таблицами
             e = dflwm.search_edges_in_file(not_table, tables)
-            if bool(e):
+            if e:
                 edges.extend(e)
+                logger.debug(f"Найдены связи с таблицами для {not_table_key}")
 
-        # search for views
-        views = {key: value for (key, value) in objects.items() if value["type"] == "view"}
-        logger.debug(f"----- Начало поиска связей с views")
-        for not_table_key, not_table in not_tables.items():
+            # Поиск связей с представлениями
             e = dflwm.search_edges_in_file(not_table, views)
-            if bool(e):
+            if e:
                 edges.extend(e)
+                logger.debug(f"Найдены связи с представлениями для {not_table_key}")
 
-        # search for functions
-        logger.debug(f"----- Начало поиска связей с functions")
-        functions = {key: value for (key, value) in objects.items() if value["type"] == "function"}
-        for not_table_key, not_table in not_tables.items():
+            # Поиск связей с функциями
             e = dflwm.search_edges_in_file(not_table, functions)
-            if bool(e):
+            if e:
                 edges.extend(e)
+                logger.debug(f"Найдены связи с функциями для {not_table_key}")
 
-        # search for procedures
-        logger.debug(f"----- Начало поиска связей с procedures")
-        procedures = {key: value for (key, value) in objects.items() if value["type"] == "procedure"}
-        for not_table_key, not_table in not_tables.items():
+            # Поиск связей с процедурами
             e = dflwm.search_edges_in_file(not_table, procedures)
-            if bool(e):
+            if e:
                 edges.extend(e)
+                logger.debug(f"Найдены связи с процедурами для {not_table_key}")
 
-        unique_edges = list(map(dict, set(tuple(d.items()) for d in edges)))
+        # Удаляем дубликаты связей
+        unique_edges = list(map(dict, set(tuple(sorted(d.items())) for d in edges)))
         logger.info(f"Найдено {len(unique_edges)} уникальных связей")
 
-        save_list_as_json(unique_edges, output_folder_path, config.common["edges_file_name"])
-        logger.info("Обработка завершена успешно")
+        # Сохраняем связи в JSON
+        save_list_as_json(unique_edges, output_folder_path, "db_edges")
+        logger.info("Связи сохранены в JSON")
 
-        # generate data flow diagram
-        generate_data_flow_diagram(unique_edges, db_objects)
+        # Загружаем данные в Neo4j
+        neo4j_handler = Neo4jHandler(
+            config.neo4j["uri"],
+            config.neo4j["user"],
+            config.neo4j["password"]
+        )
+        neo4j_handler.load_data(db_objects, unique_edges)
+        logger.info("Данные успешно загружены в Neo4j")
+
+        return True
 
     except Exception:
-        logger.exception("Произошла ошибка при обработке файлов")
+        logger.exception("Ошибка при обработке SQL файлов")
         raise
+
+
+if __name__ == "__main__":
+    process_sql_files()
