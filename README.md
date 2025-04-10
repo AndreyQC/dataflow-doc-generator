@@ -40,7 +40,7 @@ pip install uv
 uv venv
 .venv\Scripts\activate  # для Windows
 source .venv/bin/activate  # для Linux/Mac
-uv pip install -r requirements.txt
+uv pip install -r pyproject.toml
 ```
 
 ## Конфигурация

@@ -14,7 +14,7 @@ class FilesToReview:
     files = list()
 
 
-class DataFlowObects:
+class DataFlowObjects:
     config_json = "dataflow.json"
     config_path = "set"
     objects = list()
