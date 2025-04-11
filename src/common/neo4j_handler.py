@@ -44,14 +44,14 @@ class Neo4jHandler:
             try:
                 # Создаем узел с типом объекта в качестве метки
                 query = (
-                    f"CREATE (n:{object_data['type']} {{" +
-                    f"name: $name, " +
-                    f"schema: $schema, " +
-                    f"full_name: $full_name, " +
-                    f"container_name: $container_name, " +
-                    f"container_type: $container_type, " +
-                    f"object_key: $object_key" +
-                    f"}})"
+                    "CREATE (n:{} {{".format(object_data['type']) +
+                    "name: $name, " +
+                    "schema: $schema, " +
+                    "full_name: $full_name, " +
+                    "container_name: $container_name, " +
+                    "container_type: $container_type, " +
+                    "object_key: $object_key" +
+                    "})"
                 )
 
                 session.run(
@@ -82,7 +82,7 @@ class Neo4jHandler:
                     "MATCH (dest) WHERE dest.object_key = $dest_key "
                     f"CREATE (source)-[r:{relation_type} {{action: $action}}]->(dest)"
                 )
-                
+
                 session.run(
                     query,
                     source_key=edge_data["source_object_key"],

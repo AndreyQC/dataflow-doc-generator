@@ -75,6 +75,7 @@ uv venv
 .venv\Scripts\activate  # для Windows
 source .venv/bin/activate  # для Linux/Mac
 uv pip install -e .  # установка в режиме разработки
+uv pip install -r pyproject.toml
 ```
 
 4. Настройте переменную окружения для шифрования:
@@ -118,9 +119,9 @@ visualization:
     default: "lightgreen"      # Цвет по умолчанию
 ```
 
-## Использование
+## Порядок работы
 
-1. Настройте пути в `config.yml`
+1. Настройте конфигурацию в `config.yml`
 2. Запустите обработку SQL-файлов:
 ```bash
 python src/sql_processor.py
@@ -129,11 +130,66 @@ python src/sql_processor.py
 ```bash
 python src/dataflow_doc_generator.py
 ```
+4. Загрузите данные в Neo4j:
+```bash
+# Автоматический режим (использует пути из config.yml)
+python src/utils/load_neo4j_data.py
 
-Результаты работы:
-- `database.html` - интерактивная визуализация связей
-- Граф зависимостей в Neo4j
-- JSON-файлы с метаданными объектов и связей
+# Или укажите пути к файлам вручную
+python src/utils/load_neo4j_data.py --vertices path/to/vertices.json --edges path/to/edges.json
+```
+
+## Работа с Neo4j
+
+### Загрузка данных
+
+Утилита `load_neo4j_data.py` предоставляет два режима работы:
+
+1. **Автоматический режим**
+   - Использует пути из `config.yml`
+   - Ищет файлы `vertices.json` и `edges.json` в директории, указанной в `paths.output_folder`
+   - Запуск: `python src/utils/load_neo4j_data.py`
+
+2. **Ручной режим**
+   - Позволяет указать произвольные пути к файлам
+   - Запуск: `python src/utils/load_neo4j_data.py --vertices path/to/vertices.json --edges path/to/edges.json`
+
+Утилита автоматически:
+- Проверяет наличие файлов
+- Подключается к Neo4j используя параметры из `config.yml`
+- Очищает существующие данные в базе
+- Загружает новые узлы и связи
+- Логирует все операции
+
+### Требования для работы с Neo4j
+
+1. Установленный и запущенный сервер Neo4j
+2. Настроенные параметры подключения в `config.yml`:
+```yaml
+neo4j:
+  uri: "bolt://localhost:7687"  # URI подключения к Neo4j
+  user: "neo4j"                 # Пользователь Neo4j
+  password: "crypto__..."       # Зашифрованный пароль Neo4j
+```
+3. Зашифрованный пароль (используйте утилиту `encrypt_neo4j_password.py`)
+4. Установленная переменная окружения `ENVOS_CRYPTO_01` с ключом шифрования
+
+### Проверка загруженных данных
+
+После загрузки данных вы можете:
+1. Открыть Neo4j Browser (обычно доступен по адресу http://localhost:7474)
+2. Войти используя те же учетные данные, что указаны в конфигурации
+3. Выполнить запросы для просмотра данных, например:
+   ```cypher
+   // Показать все узлы
+   MATCH (n) RETURN n LIMIT 25;
+   
+   // Показать все связи
+   MATCH (n)-[r]->(m) RETURN n, r, m LIMIT 25;
+   
+   // Найти все таблицы
+   MATCH (n:TABLE) RETURN n;
+   ```
 
 ## Логирование
 

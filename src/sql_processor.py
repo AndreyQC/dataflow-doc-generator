@@ -84,7 +84,7 @@ def process_sql_files():
                 logger.debug(f"Добавлен объект: {object_from_file['object_key']}")
 
         # Сохраняем объекты в JSON
-        save_list_as_json(db_objects, output_folder_path, "db_objects")
+        save_list_as_json(db_objects, output_folder_path, config.common["vertices_file_name"])
         logger.info(f"Сохранено {len(db_objects)} объектов в JSON")
 
         # Создаем словарь объектов
@@ -133,7 +133,7 @@ def process_sql_files():
         logger.info(f"Найдено {len(unique_edges)} уникальных связей")
 
         # Сохраняем связи в JSON
-        save_list_as_json(unique_edges, output_folder_path, "db_edges")
+        save_list_as_json(unique_edges, output_folder_path, config.common["edges_file_name"])
         logger.info("Связи сохранены в JSON")
 
         # Загружаем данные в Neo4j

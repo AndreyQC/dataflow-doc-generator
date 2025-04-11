@@ -101,7 +101,7 @@ def search_edges_in_file(not_table, tables):
 
             if bool(edge):
                 found_edges.append(edge)
-    
+
     logger.info(f"Найдено {len(found_edges)} связей для объекта {not_table['object_key']}")
     return found_edges
 
@@ -130,8 +130,15 @@ def get_normalized_file_content(file_content: string):
         returns: normalized file content
     """
     logger.debug("Нормализация содержимого файла")
-    normalized_file_content = file_content.replace("\n", " [newline] ").replace("\t", " ").replace("(", " ") \
-        .replace(")", " ").replace("[", "").replace("]", "").lower()
+    normalized_file_content = file_content.replace("\t", " ").replace("(", " ") \
+        .replace(")", " ").replace("[", "").replace("]", "").replace(";", "") \
+        .replace(",", "").replace("\n", " [newline] ").lower()
+
+    normalized_file_content = normalized_file_content.replace("[newline]", " ")
+
+    normalized_file_content = normalized_file_content.replace("if not exists", "")\
+        .replace("or replace", "").replace("external", "")
+
     normalized_file_content = re.sub(" +", " ", normalized_file_content)
     logger.debug("Содержимое файла успешно нормализовано")
     return normalized_file_content

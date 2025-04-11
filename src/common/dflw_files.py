@@ -18,14 +18,14 @@ def get_files_by_path(path):
             file_path = os.path.join(root, file)
             list_of_files.append(file_path)
             logger.debug(f"Найден файл: {file_path}")
-    
+
     logger.info(f"Найдено {len(list_of_files)} файлов")
-    
+
     for name in list_of_files:
         file_info = get_file_info(name)
         files_result.append(file_info)
         logger.debug(f"Обработан файл: {file_info['file_name']}")
-    
+
     logger.info(f"Обработано {len(files_result)} файлов")
     return files_result
 
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     try:
         path = r"configure the path to folder with database project"
         logger.info(f"Запуск поиска SQL файлов в директории: {path}")
-        
+
         files_sql = [f for f in get_files_by_path(path) if f["file_extension"] == ".sql"]
         logger.info(f"Найдено {len(files_sql)} SQL файлов")
 
