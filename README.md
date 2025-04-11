@@ -1,6 +1,15 @@
 # DataFlow Documentation Generator
 
-Генератор документации для анализа потоков данных в SQL-скриптах. Проект позволяет автоматически создавать визуализацию связей между таблицами, представлениями и хранимыми процедурами в базе данных.
+OpenSource версия позволяет:
+
+- Генерировать документацию для анализа потоков данных в SQL-скриптах.
+- Автоматически создавать визуализацию связей между таблицами, представлениями и хранимыми процедурами в базе данных.
+- Загружать данные в Neo4j для последующего анализа
+
+## Авторы
+
+    @sergeiboikov - автор базы ScoreManager_DB - огромное ему спасибо. так же вместе сделали crypto
+    @AndreyQC - всего остального с сыновней помощью от @Cha11en9er
 
 ## Структура проекта
 
@@ -51,7 +60,7 @@ services:
       - ./neo4j/logs:/logs
       - ./neo4j/import:/import
     environment:
-      - NEO4J_AUTH=neo4j/you_pwd  # Логин: neo4j, пароль: adminpassword
+      - NEO4J_AUTH=neo4j/you_pwd  # Логин: neo4j, пароль: adminpassword (поменяйте)
       - NEO4JLABS_PLUGINS=["apoc"]     # Опционально: установка плагина APOC
 ```
 - Зависимости указаны в `requirements.txt`
@@ -75,7 +84,7 @@ uv venv
 .venv\Scripts\activate  # для Windows
 source .venv/bin/activate  # для Linux/Mac
 uv pip install -e .  # установка в режиме разработки
-uv pip install -r pyproject.toml
+uv pip install -r pyproject.toml # 
 ```
 
 4. Настройте переменную окружения для шифрования:
@@ -126,6 +135,10 @@ visualization:
 ```bash
 python src/sql_processor.py
 ```
+будет сгенерирована визуализация и загружены данные в neo4j
+
+если что то можно и в ручном режиме это сделать
+
 3. Сгенерируйте визуализацию:
 ```bash
 python src/dataflow_doc_generator.py
@@ -155,6 +168,7 @@ python src/utils/load_neo4j_data.py --vertices path/to/vertices.json --edges pat
    - Запуск: `python src/utils/load_neo4j_data.py --vertices path/to/vertices.json --edges path/to/edges.json`
 
 Утилита автоматически:
+
 - Проверяет наличие файлов
 - Подключается к Neo4j используя параметры из `config.yml`
 - Очищает существующие данные в базе
@@ -165,21 +179,25 @@ python src/utils/load_neo4j_data.py --vertices path/to/vertices.json --edges pat
 
 1. Установленный и запущенный сервер Neo4j
 2. Настроенные параметры подключения в `config.yml`:
-```yaml
-neo4j:
-  uri: "bolt://localhost:7687"  # URI подключения к Neo4j
-  user: "neo4j"                 # Пользователь Neo4j
-  password: "crypto__..."       # Зашифрованный пароль Neo4j
-```
-3. Зашифрованный пароль (используйте утилиту `encrypt_neo4j_password.py`)
-4. Установленная переменная окружения `ENVOS_CRYPTO_01` с ключом шифрования
+
+  ```yaml
+  neo4j:
+    uri: "bolt://localhost:7687"  # URI подключения к Neo4j
+    user: "neo4j"                 # Пользователь Neo4j
+    password: "crypto__..."       # Зашифрованный пароль Neo4j
+  ```
+
+1. Зашифрованный пароль (используйте утилиту `encrypt_neo4j_password.py`)
+2. Установленная переменная окружения `ENVOS_CRYPTO_01` с ключом шифрования
 
 ### Проверка загруженных данных
 
 После загрузки данных вы можете:
+
 1. Открыть Neo4j Browser (обычно доступен по адресу http://localhost:7474)
 2. Войти используя те же учетные данные, что указаны в конфигурации
 3. Выполнить запросы для просмотра данных, например:
+
    ```cypher
    // Показать все узлы
    MATCH (n) RETURN n LIMIT 25;
@@ -194,6 +212,7 @@ neo4j:
 ## Логирование
 
 Проект использует loguru для логирования. Логи сохраняются в директории `logs/`:
+
 - `app.log` - основной лог с уровнем DEBUG
 - `error.log` - лог ошибок
 
@@ -218,6 +237,7 @@ neo4j:
 ## Визуализация
 
 Визуализация включает:
+
 - Различные цвета для разных типов объектов
 - Интерактивное управление (масштабирование, перемещение)
 - Фильтрация по типам объектов
